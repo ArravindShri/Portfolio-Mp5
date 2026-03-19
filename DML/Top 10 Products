@@ -1,0 +1,10 @@
+CREATE VIEW Top_10_products as 
+SELECT Top 10
+	p.product_name,
+	SUM(s.quantity) as [Total Quantity],
+	SUM(s.total_amount) as [Total Revenue]
+FROM products p
+JOIN sales_transactions s
+ON p.product_id = s.product_id
+GROUP BY p.product_name
+ORDER BY [Total Revenue] DESC
