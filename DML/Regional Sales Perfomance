@@ -1,0 +1,24 @@
+CREATE VIEW Regional_sales_peformance as 
+
+SELECT region, 
+       SUM(total_amount) as total_revenue, 
+       COUNT(transaction_id) as [Number of Sales], 
+       AVG(total_amount) as [Average Sale Size],
+       (SUM(total_amount) / (SELECT SUM(total_amount) FROM sales_transactions)) * 100 as pct_of_total
+FROM sales_transactions 
+GROUP BY region
+
+
+Explanation: 
+
+The subquery (SELECT SUM(total_amount) FROM sales_transactions) is a completely independent calculation 
+that runs separately from the outer query and calculates the total company revenue by summing ALL transactions 
+across ALL regions. Even though the outer query has GROUP BY region which creates separate groups for North, 
+South, East, and West, the subquery completely ignores this grouping because it's a self-contained query 
+that starts fresh with FROM sales_transactions and has no GROUP BY clause of its own, meaning it treats
+the entire table as one big group. This is why when calculating the percentage for North region, the subquery 
+returns the same total (let's say $10,500) that it returns for South, East, and West - 
+it always looks at the complete dataset and returns the grand total. The outer SUM(total_amount) 
+respects the GROUP BY and calculates differently for each region (North gets $4,500, South gets $2,000, etc.),
+but the subquery acts like a fixed reference point that says "here's the total company revenue" regardless 
+of which group the outer query is currently processing, allowing us to divide each region's revenue by this constant total to get the percentage contribution.
