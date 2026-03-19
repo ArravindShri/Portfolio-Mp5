@@ -1,0 +1,10 @@
+CREATE VIEW Revenue_by_Category as 
+
+SELECT 
+	p.category,
+	SUM(s.total_amount) as [Total Revenue]
+FROM products p
+JOIN sales_transactions s
+ON p.product_id = s.product_id
+GROUP BY p.category
+ORDER BY [Total Revenue] DESC
