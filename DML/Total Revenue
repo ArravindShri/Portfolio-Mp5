@@ -1,0 +1,5 @@
+CREATE VIEW Revenue_month as
+SELECT SUM(total_amount) as revenue , FORMAT(sales_date, 'yyyy-MM') as sales_month 
+FROM sales_transactions 
+GROUP BY FORMAT(sales_date, 'yyyy-MM')
+
