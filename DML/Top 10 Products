@@ -1,8 +1,9 @@
-CREATE VIEW Top_10_products as 
+CREATE VIEW [ Top 10 Products by Revenue ] as 
 SELECT Top 10
 	p.product_name,
 	SUM(s.quantity) as [Total Quantity],
-	SUM(s.total_amount) as [Total Revenue]
+	SUM(s.total_amount) as [Total Revenue],
+	CAST(SUM(s.total_amount)/SUM(s.quantity)as DECIMAL(10,2)) as [Average Price Per Unit]
 FROM products p
 JOIN sales_transactions s
 ON p.product_id = s.product_id
