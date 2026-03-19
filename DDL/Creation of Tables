@@ -1,0 +1,41 @@
+USE Sales_performance;
+GO 
+
+CREATE TABLE customers ( 
+	customer_id INT Primary Key,
+	customer_name VARCHAR(50),
+	customer_segment VARCHAR(50), 
+	location VARCHAR(50)
+)
+
+CREATE TABLE products ( 
+	product_id INT PRIMARY KEY,
+	product_name VARCHAR(50),
+	category VARCHAR(50),
+	subcategory VARCHAR(50),
+	cost_price DECIMAL(10,2)
+)
+
+CREATE TABLE sales_reps(
+	sales_rep_id INT PRIMARY KEY,
+	rep_name VARCHAR(50),
+	hire_date DATETIME,
+	region VARCHAR(50),
+	monthly_target DECIMAL(10,2)
+)
+
+CREATE TABLE sales_transactions(
+	transaction_id INT Primary key,
+	sales_date DATETIME,
+	product_id INT,
+	sales_rep_id INT,
+	customer_id INT, 
+	quantity INT,
+	unit_price DECIMAL(10,2),
+	total_amount DECIMAL(10,2),
+	discount DECIMAL(10,2),
+	region VARCHAR(50),
+	FOREIGN KEY ( product_id ) references products(product_id),
+	FOREIGN KEY ( sales_rep_id) references sales_reps(sales_rep_id),
+	FOREIGN KEY ( customer_id) references customers(customer_id),
+) 
