@@ -1,0 +1,39 @@
+BULK INSERT customers
+FROM "C:\Mac\Home\Desktop\Data Analysis\ Mock Projects\MP 4\customers.csv"
+WITH (
+FIRSTROW = 2,
+FIELDTERMINATOR = ',',
+ROWTERMINATOR = '0x0a',
+TABLOCK,
+FORMAT = 'CSV'
+)
+
+BULK INSERT products
+FROM "C:\Mac\Home\Desktop\Data Analysis\ Mock Projects\MP 4\products.csv"
+WITH (
+FIRSTROW = 2,
+FIELDTERMINATOR = ',',
+ROWTERMINATOR = '0x0a',
+TABLOCK,
+FORMAT = 'CSV'
+)
+
+BULK INSERT sales_reps
+FROM "C:\Mac\Home\Desktop\Data Analysis\ Mock Projects\MP 4\sales_reps.csv"
+WITH(
+FIRSTROW = 2,
+FIELDTERMINATOR =',',
+ROWTERMINATOR = '0x0a',
+TABLOCK,
+FORMAT = 'CSV'
+)
+
+BULK INSERT sales_transactions
+FROM "C:\Mac\Home\Desktop\Data Analysis\ Mock Projects\MP 4\sales_transactions.csv"
+WITH(
+FIRSTROW = 2,
+FIELDTERMINATOR = ',',
+ROWTERMINATOR = '0x0a',
+TABLOCK,
+FORMAT = 'CSV'
+)
