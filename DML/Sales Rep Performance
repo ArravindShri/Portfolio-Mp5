@@ -1,0 +1,17 @@
+CREATE VIEW [Rep Performance ] AS 
+
+SELECT 
+	r.rep_name,
+	COALESCE(SUM(s.total_amount),0) as [Total Revenue],
+	COALESCE(COUNT(s.transaction_id),0) as [Deal Closed],
+	CASE 
+		WHEN SUM(s.total_amount) > 35000 THEN ' Top Performer'
+		WHEN SUM(s.total_amount) <= 35000 and SUM(s.total_amount) >= 30000 THEN ' Good Performer '
+		WHEN SUM(s.total_amount) is NULL THEN ' Trainee'
+		ELSE ' Need Improvement'
+	END as Performance_category
+FROM sales_reps r
+LEFT JOIN sales_transactions s
+ON r.sales_rep_id = s.sales_rep_id
+GROUP BY r.rep_name
+ORDER BY [Total Revenue] DESC 
