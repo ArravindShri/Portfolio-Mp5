@@ -1,0 +1,16 @@
+CREATE VIEW [Sales history by Customers] as 
+SELECT 
+	c.customer_name,
+	c.customer_segment,
+	MIN(t.sales_date) as [First Purchase],
+	MAX(t.sales_date) as[Recent Purchase],
+	COUNT(t.transaction_id) as [Total Purchase],
+	SUM(t.total_amount) as [Total Revenue],
+	SUM(t.total_amount)/COUNT(t.transaction_id) as [Average purchase value],
+	DATEDIFF(day,MAX(t.sales_date),GETDATE()) as [Days since last purchase]
+FROM customers C
+LEFT JOIN sales_transactions t
+ON c.customer_id = t.customer_id
+GROUP BY c.customer_name,c.customer_segment
+HAVING COUNT(t.transaction_id) >= 3
+ORDER BY [Total Revenue] DESC
