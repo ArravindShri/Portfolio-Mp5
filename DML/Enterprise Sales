@@ -1,0 +1,14 @@
+CREATE VIEW [Sales by Enterprise] as 
+SELECT 
+	c.customer_segment,
+	SUM(t.total_amount ) as [Total Revenue],
+	COUNT(t.transaction_id) as transactions,
+	AVG(t.total_amount) as [Average Transactions],
+	p.category
+FROM customers c
+LEFT JOIN sales_transactions t
+ON c.customer_id = t.customer_id
+LEFT JOIN products p
+ON t.product_id = p.product_id
+GROUP BY c.customer_segment,p.category
+ORDER BY [Total Revenue] DESC
