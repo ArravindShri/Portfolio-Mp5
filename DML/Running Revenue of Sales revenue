@@ -1,0 +1,35 @@
+CREATE VIEW [Running Total of Sales Reps ] AS
+WITH monthly_rep_revenue AS (
+    SELECT 
+        sr.rep_name,
+        sr.monthly_target,
+        FORMAT(st.sales_date, 'yyyy-MM') as month,
+        MIN(st.sales_date) as month_date, 
+        SUM(st.total_amount) as monthly_revenue
+    FROM sales_reps sr
+    JOIN sales_transactions st ON sr.sales_rep_id = st.sales_rep_id
+    GROUP BY sr.rep_name, sr.monthly_target, FORMAT(st.sales_date, 'yyyy-MM')
+),
+qualifying_reps AS (
+    SELECT rep_name
+    FROM monthly_rep_revenue
+    GROUP BY rep_name
+    HAVING SUM(monthly_revenue) >= 25000
+)
+SELECT 
+    mrr.rep_name,
+    mrr.month,  -- Display as 'yyyy-MM'
+    mrr.monthly_target,
+    mrr.monthly_revenue,
+    mrr.monthly_revenue - mrr.monthly_target as variance,
+    CASE 
+        WHEN mrr.monthly_revenue >= mrr.monthly_target THEN 'Met Target'
+        ELSE 'Below Target'
+    END as target_status,
+    SUM(mrr.monthly_revenue) OVER (
+        PARTITION BY mrr.rep_name 
+        ORDER BY mrr.month_date  -- Order by DATE, not string!
+    ) as ytd_revenue
+FROM monthly_rep_revenue mrr
+INNER JOIN qualifying_reps qr ON mrr.rep_name = qr.rep_name
+ORDER BY mrr.rep_name, mrr.month_date
