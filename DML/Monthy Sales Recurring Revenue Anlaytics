@@ -1,0 +1,16 @@
+CREATE VIEW [Monthy Sales Recurring Revenue Anlaytics ] as 
+WITH monthly_revenue AS (
+    SELECT
+        FORMAT(sales_date, 'yyyy-MM') as Sales_month,
+        SUM(total_amount) as [Current Revenue]
+    FROM sales_transactions
+    GROUP BY FORMAT(sales_date, 'yyyy-MM')
+)
+SELECT 
+    Sales_month,
+    [Current Revenue],
+    LAG([Current Revenue], 1) OVER (ORDER BY Sales_month) as [Previous Revenue],  -- Added comma!
+    [Current Revenue] - LAG([Current Revenue], 1) OVER (ORDER BY Sales_month) as [Growth Revenue],
+    (([Current Revenue] - LAG([Current Revenue], 1) OVER (ORDER BY Sales_month)) / LAG([Current Revenue], 1) OVER (ORDER BY Sales_month)) * 100 as [Growth Percentage]  -- Fixed parentheses!
+FROM monthly_revenue
+ORDER BY Sales_month ASC  
