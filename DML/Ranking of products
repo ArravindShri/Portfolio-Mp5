@@ -1,0 +1,24 @@
+CREATE VIEW [Prdouct Category sales] as 
+WITH product_revenue AS ( 
+	SELECT 
+		p.category,
+		p.product_name,
+		SUM(t.total_amount) as [Total Revenue]
+	FROM products p
+	LEFT JOIN sales_transactions t
+	ON p.product_id =t.product_id
+	GROUP BY p.category, p.product_name
+),
+Ranked_products as (
+SELECT 
+	category,
+	product_name,
+	[Total Revenue],
+	DENSE_RANK()OVER(partition by category ORDER BY [Total Revenue] DESC) as [Category Ranking]
+FROM product_revenue
+)
+SELECT *
+FROM Ranked_products 
+where [Category Ranking] <= 10
+ORDER BY category, [Category Ranking]
+
